@@ -1,6 +1,7 @@
 
-import { GoogleGenAI, Type, GenerateContentResponse, Modality } from "@google/genai";
+import { GoogleGenAI, Type, Modality } from "@google/genai";
 
+// Creating a new instance per call ensures we always have the latest API key from the user dialog.
 const getAI = () => new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export const generateSEOContent = async (topic: string, keywords: string[]): Promise<any> => {
@@ -41,17 +42,11 @@ export const generateSEOContent = async (topic: string, keywords: string[]): Pro
 export const generateLandingPageData = async (offer: string, audience: string, style: string = 'Stake Global'): Promise<any> => {
   const ai = getAI();
   const prompt = `Generate a COMPREHENSIVE high-converting full landing page for a Stake Casino affiliate offer.
-  Brand Style/Context: ${style} (e.g., if CanadaStake, focus on Canadian players, CAD currency, and local trust).
+  Brand Style/Context: ${style} (if CanadaStake, focus on Canadian players, CAD, and local trust).
   Offer: ${offer}
   Target Audience: ${audience}
-  Goal: Maximal high-intent signups.
-  
-  Requirements:
-  1. Professional, high-stakes branding.
-  2. Clear value proposition.
-  3. Trust-building elements.
-  
-  Return JSON matching the schema provided.`;
+  Goal: Maximal high-intent signups for Stake.
+  Return JSON matching the schema.`;
 
   const response = await ai.models.generateContent({
     model: 'gemini-3-flash-preview',
@@ -77,7 +72,7 @@ export const generateLandingPageData = async (offer: string, audience: string, s
               properties: {
                 title: { type: Type.STRING },
                 description: { type: Type.STRING },
-                icon: { type: Type.STRING, description: "A simple emoji representing the feature" }
+                icon: { type: Type.STRING }
               },
               required: ["title", "description", "icon"]
             }
@@ -161,10 +156,11 @@ export const generateMultiSpeakerAudio = async (joeText: string, janeText: strin
 export const generateLocalizedStrategy = async (topic: string, lat?: number, lng?: number): Promise<any> => {
   const ai = getAI();
   const prompt = `Research local gambling venues and betting trends for: ${topic}. 
-  Compare physical options to the benefits of joining Stake Casino (Free Bonus, Convenience). 
+  Compare physical options to the benefits of joining Stake Casino. 
   Provide a list of physical locations found and then a marketing strategy.`;
 
   const config: any = {
+    // Maps grounding is only supported in Gemini 2.5 series models.
     tools: [{ googleMaps: {} }, { googleSearch: {} }],
   };
 
@@ -177,7 +173,7 @@ export const generateLocalizedStrategy = async (topic: string, lat?: number, lng
   }
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-2.5-flash-preview-09-2025',
     contents: prompt,
     config: config,
   });
@@ -201,7 +197,8 @@ export const generateCasinoImage = async (prompt: string, aspectRatio: string): 
       imageConfig: {
         aspectRatio: aspectRatio as any,
         imageSize: "1K"
-      }
+      },
+      tools: [{ googleSearch: {} }] // Pro image supports search for real-time accuracy
     }
   });
 
@@ -260,6 +257,7 @@ export const generateVeoVideo = async (prompt: string, imageBase64?: string, asp
   }
 
   const downloadLink = operation.response?.generatedVideos?.[0]?.video?.uri;
+  // Use current API key for video download
   const res = await fetch(`${downloadLink}&key=${process.env.API_KEY}`);
   const blob = await res.blob();
   return URL.createObjectURL(blob);
