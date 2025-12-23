@@ -1,0 +1,9 @@
+{
+  "name": "StakeAffiliate AI - The Ultimate Casino Content Engine",
+  "description": "A high-performance AI suite for casino affiliate marketers. Generate SEO-optimized strategy guides, branded social media visuals, and cinematic promo videos to drive Stake Casino signups.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}
