@@ -104,6 +104,20 @@ All platforms require the `API_KEY` environment variable:
 **GitHub Pages:**
 - Repository Settings → Secrets and variables → Actions → New repository secret
 
+## Security Considerations
+
+⚠️ **Important:** This is a client-side application where the API key is embedded in the built JavaScript files and will be visible in the browser. This means:
+
+- The API key can be extracted by anyone viewing the deployed site
+- It's recommended to use API key restrictions in the Google Cloud Console
+- For production applications, consider implementing a backend API proxy to keep keys secure
+- Monitor your API usage regularly to detect any abuse
+
+To restrict your Gemini API key:
+1. Go to https://aistudio.google.com/app/apikey
+2. Click on your API key
+3. Set up restrictions (e.g., HTTP referrer restrictions for your domain)
+
 ## Verification
 
 After deployment:
