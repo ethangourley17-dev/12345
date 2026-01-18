@@ -40,7 +40,7 @@ This app can be deployed to various platforms. Choose the one that fits your nee
 
 ### Option 1: Deploy to Netlify (Recommended)
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/ethangourley17-dev/12345)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start)
 
 **Manual Deployment:**
 1. Install Netlify CLI: `npm install -g netlify-cli`
@@ -52,7 +52,7 @@ This app can be deployed to various platforms. Choose the one that fits your nee
 
 ### Option 2: Deploy to Vercel
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/ethangourley17-dev/12345)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
 
 **Manual Deployment:**
 1. Install Vercel CLI: `npm install -g vercel`

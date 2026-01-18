@@ -9,11 +9,11 @@ This application is now ready to be deployed to the web! You have multiple deplo
 Choose your preferred platform and click the button:
 
 **Netlify (Recommended):**
-- Click: [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/ethangourley17-dev/12345)
+- Click: [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start)
 - Set `API_KEY` environment variable in Netlify dashboard
 
 **Vercel:**
-- Click: [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/ethangourley17-dev/12345)
+- Click: [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
 - Set `API_KEY` environment variable in Vercel dashboard
 
 ### 📦 GitHub Pages (Automated)
@@ -34,11 +34,11 @@ GitHub Pages deployment is configured with GitHub Actions:
    - Push to `main` branch, OR
    - Go to **Actions** tab → **Deploy to GitHub Pages** → **Run workflow**
 
-4. Your app will be live at: `https://ethangourley17-dev.github.io/12345/`
+4. Your app will be live at: `https://YOUR_USERNAME.github.io/YOUR_REPOSITORY/`
 
-**Note:** If deploying to a repository (not username.github.io), uncomment the `base` line in `vite.config.ts`:
+**Note:** If deploying to a repository (not username.github.io), uncomment and update the `base` line in `vite.config.ts`:
 ```typescript
-base: '/12345/',
+base: '/your-repository-name/',
 ```
 
 ## Platform-Specific Instructions
