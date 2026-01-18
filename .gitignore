@@ -22,3 +22,15 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Jupyter Notebook output files
+sales_tools.py
+measurement_engine.py
+report_builder.py
+Roof_Estimate_Report.html
+*.ipynb_checkpoints
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
