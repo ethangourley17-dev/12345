@@ -30,7 +30,6 @@ This will install all required packages including:
 Create a `.env.local` file in the root directory and add your Gemini API key:
 
 ```env
-GEMINI_API_KEY=your_api_key_here
 API_KEY=your_api_key_here
 ```
 
