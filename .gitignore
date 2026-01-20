@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Python Backend
+__pycache__/
+*.pyc
+*.html
+*.ipynb_checkpoints
