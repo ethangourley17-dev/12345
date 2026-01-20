@@ -1,4 +1,6 @@
 import math
+import pandas as pd
+import os
 
 class DamageAssessor:
     def assess(self, damage_probability):
@@ -113,3 +115,36 @@ class ROIAnalyzer:
             'annual_savings': round(annual_savings, 2),
             'ten_year_savings': round(ten_year_savings, 2)
         }
+
+class MaterialEstimator:
+    """
+    Generates a list of required materials based on roof area and CSV configuration.
+    """
+    def __init__(self, csv_path='roofing_app/materials.csv'):
+        # Handle path differences if running from root vs inside roofing_app
+        if not os.path.exists(csv_path) and os.path.exists('materials.csv'):
+             csv_path = 'materials.csv'
+
+        try:
+            self.materials_df = pd.read_csv(csv_path)
+        except FileNotFoundError:
+            print(f"Warning: {csv_path} not found. Material estimation may be empty.")
+            self.materials_df = pd.DataFrame(columns=['Material', 'Coverage', 'Unit', 'Buffer'])
+
+    def generate_material_list(self, real_area):
+        estimate = {}
+        if self.materials_df.empty:
+            return estimate
+
+        for _, row in self.materials_df.iterrows():
+            # Calculate quantity: (Area / Coverage) * Buffer, rounded up
+            try:
+                coverage = float(row['Coverage'])
+                if coverage > 0:
+                    raw_need = real_area / coverage
+                    buffered_need = raw_need * float(row['Buffer'])
+                    quantity = math.ceil(buffered_need)
+                    estimate[row['Material']] = f"{quantity} {row['Unit']}"
+            except (ValueError, TypeError):
+                continue
+        return estimate

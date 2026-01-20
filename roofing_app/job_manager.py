@@ -1,6 +1,7 @@
 import sqlite3
 import pandas as pd
 from datetime import datetime
+import os
 
 DB_FILE = "roofing_jobs.db"
 
@@ -8,6 +9,8 @@ def init_db():
     """Initialize the SQLite database with the jobs table."""
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
+
+    # Create table if it doesn't exist
     c.execute('''
         CREATE TABLE IF NOT EXISTS jobs (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -16,9 +19,18 @@ def init_db():
             value REAL,
             status TEXT,
             created_at TIMESTAMP,
-            notes TEXT
+            notes TEXT,
+            lead_source TEXT
         )
     ''')
+
+    # Migration check: Check if 'lead_source' column exists
+    c.execute("PRAGMA table_info(jobs)")
+    columns = [info[1] for info in c.fetchall()]
+    if 'lead_source' not in columns:
+        print("Migrating DB: Adding lead_source column...")
+        c.execute("ALTER TABLE jobs ADD COLUMN lead_source TEXT")
+
     conn.commit()
     conn.close()
 
@@ -26,20 +38,23 @@ class JobManager:
     def __init__(self):
         init_db()
 
-    def add_job(self, customer_name, address, value, status="Lead", notes=""):
+    def add_job(self, customer_name, address, value, status="Lead", notes="", lead_source="Website"):
         conn = sqlite3.connect(DB_FILE)
         c = conn.cursor()
         created_at = datetime.now()
         c.execute('''
-            INSERT INTO jobs (customer_name, address, value, status, created_at, notes)
-            VALUES (?, ?, ?, ?, ?, ?)
-        ''', (customer_name, address, value, status, created_at, notes))
+            INSERT INTO jobs (customer_name, address, value, status, created_at, notes, lead_source)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ''', (customer_name, address, value, status, created_at, notes, lead_source))
         conn.commit()
         conn.close()
 
     def get_jobs(self):
         conn = sqlite3.connect(DB_FILE)
-        df = pd.read_sql_query("SELECT * FROM jobs", conn)
+        try:
+            df = pd.read_sql_query("SELECT * FROM jobs", conn)
+        except Exception:
+            df = pd.DataFrame()
         conn.close()
         return df
 

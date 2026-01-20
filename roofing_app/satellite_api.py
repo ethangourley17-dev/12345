@@ -1,10 +1,6 @@
 import requests
 import base64
 import os
-# from google.colab import userdata # Not available in standard python env
-# import pystac_client # Not needed for Google Static Maps
-# import stackstac # Not needed for Google Static Maps
-# import numpy as np # Not needed for Google Static Maps
 
 def fetch_google_static_map(lat, lon, api_key=None, zoom=20, size="600x400", maptype="satellite"):
     """
@@ -34,40 +30,6 @@ def fetch_google_static_map(lat, lon, api_key=None, zoom=20, size="600x400", map
             return None
     except Exception as e:
         print(f"Exception fetching Google image: {e}")
-        return None
-
-def fetch_stac_imagery(lat, lon, cloud_cover_limit=20):
-    """
-    Fetches metadata for the most recent Sentinel-2 image from Earth Search STAC API.
-    Returns a dictionary with basic info or None.
-    """
-    STAC_URL = "https://earth-search.aws.element84.com/v1"
-    COLLECTION = "sentinel-2-l2a"
-    point = {"type": "Point", "coordinates": [lon, lat]}
-
-    try:
-        catalog = pystac_client.Client.open(STAC_URL)
-        search = catalog.search(
-            intersects=point,
-            collections=[COLLECTION],
-            query={"eo:cloud_cover": {"lt": cloud_cover_limit}},
-            sortby=[{"field": "properties.datetime", "direction": "desc"}],
-            max_items=1
-        )
-        items = list(search.items())
-        if items:
-            item = items[0]
-            return {
-                "date": item.datetime,
-                "platform": item.properties.get("platform"),
-                "cloud_cover": item.properties.get("eo:cloud_cover"),
-                "id": item.id
-            }
-        else:
-            print("No STAC items found.")
-            return None
-    except Exception as e:
-        print(f"Exception fetching STAC imagery: {e}")
         return None
 
 def analyze_resolution(gsd_meters):
