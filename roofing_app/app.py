@@ -10,6 +10,7 @@ import satellite_api
 import solar_api
 from measurement_engine import CostEstimator, MaterialComparator, ROIAnalyzer, DamageAssessor
 from report_builder import ReportBuilder
+from job_manager import JobManager
 
 # --- Page Config ---
 st.set_page_config(
@@ -18,6 +19,9 @@ st.set_page_config(
     page_icon="\uD83C\uDFD8\uFE0F",
     initial_sidebar_state="expanded"
 )
+
+# --- Navigation ---
+page = st.sidebar.radio("Navigation", ["Calculator", "Job Board"])
 
 # --- Custom CSS for Modern UI ---
 st.markdown("""
@@ -50,11 +54,11 @@ with col_head2:
     st.title("Roofing AI Sales Tool")
     st.markdown("**Intelligent Estimation & Financial Analysis Engine**")
 
-# --- Sidebar Input Panel ---
-with st.sidebar:
-    st.header("\uD83C\uDFE0 Property Config")
+if page == "Calculator":
+    # --- Sidebar Input Panel ---
+    st.sidebar.header("\uD83C\uDFE0 Property Config")
 
-    with st.expander("Location Details", expanded=True):
+    with st.sidebar.expander("Location Details", expanded=True):
         address = st.text_input("Address", "51046 Range Road 224")
         lat = st.number_input("Latitude", value=53.4357, format="%.4f")
         lon = st.number_input("Longitude", value=-113.2185, format="%.4f")
@@ -63,18 +67,19 @@ with st.sidebar:
         if not google_maps_api_key:
             google_maps_api_key = "AIzaSyxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" # Fallback placeholder
 
-    with st.expander("Roof Measurements", expanded=True):
+    with st.sidebar.expander("Roof Measurements", expanded=True):
         roof_area_sqft = st.number_input("Total Area (sq ft)", value=3400, min_value=100, step=50)
         roof_pitch_degrees = st.number_input("Pitch (degrees)", value=20, min_value=0, max_value=90)
 
-    with st.expander("Condition & Energy", expanded=False):
+    with st.sidebar.expander("Condition & Energy", expanded=False):
         damage_probability = st.slider("AI Damage Probability", 0.0, 1.0, 0.85, 0.05)
         solar_panel_capacity_kw = st.number_input("Solar Potential (kW)", value=10.5, min_value=0.0, step=0.5)
 
-    generate_btn = st.button("\u26A1 Run Analysis", type="primary", use_container_width=True)
+    with st.sidebar:
+        generate_btn = st.button("\u26A1 Run Analysis", type="primary", use_container_width=True)
 
-# --- Main Application Logic ---
-if generate_btn:
+    # --- Main Application Logic ---
+    if generate_btn:
 
     # Initialize Engines
     assessor = DamageAssessor()
