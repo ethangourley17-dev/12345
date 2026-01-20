@@ -1,0 +1,225 @@
+from datetime import datetime
+
+class ReportBuilder:
+    def add_satellite_overlay(self, image_base64):
+        """
+        Generates the HTML snippet for the satellite image overlay.
+        """
+        if image_base64:
+            return f'<div class="satellite-view"><img src="data:image/png;base64,{image_base64}" alt="Satellite View"></div>'
+        else:
+            return '<div class="satellite-view">Satellite imagery unavailable</div>'
+
+    def create_pdf(self, html_content, filename):
+        """
+        Placeholder for PDF generation logic.
+        Real implementation would require libraries like weasyprint or pdfkit.
+        """
+        print(f"[Mock] Generating PDF report: {filename}")
+        # In a real app, we might write the HTML to a file and convert it.
+        # For now, we assume the HTML file is the primary output.
+        return filename
+
+    def generate_html(self, scenario_data, structure_results, grand_total_cost, grand_total_squares, property_value, solar_roi, damage_assessment, image_base64=None):
+        """
+        Generates the full HTML report string.
+        """
+        img_html = self.add_satellite_overlay(image_base64)
+
+        # Determine Status Color
+        category = damage_assessment.get('category', 'Unknown')
+        status_class = 'status-unknown'
+        if category == 'Intact':
+            status_class = 'status-intact'
+        elif category == 'Minor Damage':
+            status_class = 'status-minor'
+        elif category == 'Severe Damage':
+            status_class = 'status-severe'
+
+        css = """
+        <style>
+            body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #1e293b; max-width: 1000px; margin: 0 auto; padding: 40px; background-color: white; }
+            .header { border-bottom: 4px solid #2563eb; padding-bottom: 20px; margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end; }
+            .header h1 { color: #2563eb; margin: 0; font-size: 28px; }
+            .header p { color: #64748b; margin: 0; font-size: 14px; }
+
+            .title-section { background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); color: white; padding: 30px; border-radius: 12px; margin-bottom: 30px; display: flex; align-items: center; gap: 20px; }
+            .title-content { flex: 1; }
+            .title-section h2 { margin: 0 0 10px 0; font-size: 32px; }
+            .satellite-view { width: 300px; height: 200px; border-radius: 8px; border: 3px solid white; background-color: #cbd5e1; display: flex; align-items: center; justify-content: center; color: #1e293b; font-size: 0.8em; text-align: center; overflow: hidden; }
+            .satellite-view img { width: 100%; height: 100%; object-fit: cover; }
+
+            .section { margin-bottom: 50px; }
+            .section h2 { border-bottom: 2px solid #e2e8f0; padding-bottom: 15px; color: #1e293b; margin-bottom: 25px; font-size: 24px; }
+
+            /* Damage Assessment Styles */
+            .assessment-box { padding: 20px; border-radius: 8px; margin-bottom: 40px; border-left: 6px solid #ccc; background-color: #f8fafc; }
+            .status-intact { border-left-color: #22c55e; background-color: #f0fdf4; }
+            .status-minor { border-left-color: #f97316; background-color: #fff7ed; }
+            .status-severe { border-left-color: #ef4444; background-color: #fef2f2; }
+            .assessment-title { font-weight: bold; font-size: 1.2em; margin-bottom: 10px; color: #334155; }
+            .assessment-detail { font-size: 1em; color: #475569; }
+
+            .structure-block { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+            .structure-title { font-size: 20px; font-weight: bold; color: #1e293b; margin-bottom: 15px; border-left: 4px solid #2563eb; padding-left: 10px; }
+
+            .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+            .box { background: white; padding: 15px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+            .box h3 { color: #64748b; font-size: 0.75em; text-transform: uppercase; margin: 0 0 5px 0; }
+            .box .value { font-size: 1.25em; font-weight: 700; color: #1e293b; }
+
+            .grand-total-box { background: #f0fdf4; border: 2px solid #16a34a; padding: 25px; border-radius: 12px; text-align: center; margin-top: 30px; }
+            .grand-total-box h3 { color: #166534; margin: 0 0 10px 0; }
+            .grand-total-box .value { font-size: 3em; font-weight: 800; color: #15803d; }
+
+            .roi-section { display: flex; gap: 20px; margin-top: 30px; }
+            .roi-card { flex: 1; background: #fffbeb; border: 1px solid #fcd34d; padding: 20px; border-radius: 8px; }
+
+            table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9em; }
+            th, td { text-align: left; padding: 8px; border-bottom: 1px solid #e2e8f0; }
+            th { background-color: #f1f5f9; }
+        </style>
+        """
+
+        html_content = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Report - {scenario_data['address']}</title>
+            {css}
+        </head>
+        <body>
+            <div class="header">
+                <div class="company-logo">
+                    <h1>Roof Measure AI</h1>
+                    <p>Multi-Structure Analysis</p>
+                </div>
+                <div class="report-meta">
+                    <p>{datetime.now().strftime('%B %d, %Y')}</p>
+                </div>
+            </div>
+
+            <div class="title-section">
+                <div class="title-content">
+                    <h2>{scenario_data['address']}</h2>
+                    <p>Comprehensive Multi-Structure Estimate</p>
+                </div>
+                {img_html}
+            </div>
+
+            <!-- Roof Condition Assessment -->
+            <div class="section">
+                <h2>Roof Condition Assessment</h2>
+                <div class="assessment-box {status_class}">
+                    <div class="assessment-title">Condition: {category.upper()}</div>
+                    <div class="assessment-detail">
+                        Based on AI analysis of recent satellite imagery, this roof has been categorized as <strong>{category}</strong>.
+                        <br><br>
+                        <strong>Impact on Estimate:</strong> A removal cost multiplier of <strong>{damage_assessment.get('severity_factor', 1.0)}x</strong> has been applied to account for the increased labor and disposal requirements associated with this condition.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Structures Breakdown -->
+            <div class="section">
+                <h2>Structure Breakdown</h2>
+        """
+
+        for res in structure_results:
+            est = res['estimates']
+            # Basic structure output
+            html_content += f"""
+                <div class="structure-block">
+                    <div class="structure-title">{res['name']}</div>
+                    <div class="grid">
+                        <div class="box">
+                            <h3>Total Estimate</h3>
+                            <div class="value">${est['total_cost']:,}</div>
+                        </div>
+                        <div class="box">
+                            <h3>Size</h3>
+                            <div class="value">{est['squares']} Squares</div>
+                        </div>
+                        <div class="box">
+                            <h3>Removal</h3>
+                            <div class="value">${est['removal_cost']:,}</div>
+                        </div>
+                        <div class="box">
+                            <h3>Material</h3>
+                            <div class="value">${est['material_cost']:,}</div>
+                        </div>
+                        <div class="box">
+                            <h3>Labor</h3>
+                            <div class="value">${est['labor_cost']:,}</div>
+                        </div>
+                    </div>
+                </div>
+            """
+
+        html_content += """
+            </div>
+
+            <!-- Grand Totals & ROI -->
+            <div class="section">
+                <h2>Project Summary & Investment Analysis</h2>
+
+                <div class="grand-total-box">
+                    <h3>PROJECT GRAND TOTAL</h3>
+                    <div class="value">${:,.2f}</div>
+                    <p>Total Size: {:.2f} Squares</p>
+                </div>
+
+                <div class="roi-section">
+                    <div class="roi-card">
+                        <h3>Est. Property Value Increase</h3>
+                        <div class="value" style="font-size: 1.5em; font-weight: bold; color: #b45309;">
+                            ${:,.2f} - ${:,.2f}
+                        </div>
+                        <p>60-70% of Project Cost</p>
+                    </div>
+                    <div class="roi-card">
+                        <h3>10-Year Solar Savings</h3>
+                        <div class="value" style="font-size: 1.5em; font-weight: bold; color: #b45309;">
+                            ${:,.2f}
+                        </div>
+                        <p>Based on {} annual sunlight hours</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Material Options (Main House Reference)</h2>
+                <table>
+                    <thead><tr><th>Material</th><th>Cost Multiplier Ref</th><th>Lifespan</th><th>Warranty</th></tr></thead>
+                    <tbody>
+        """.format(
+            grand_total_cost,
+            grand_total_squares,
+            property_value['low_estimate'], property_value['high_estimate'],
+            solar_roi['ten_year_savings'],
+            scenario_data.get('annual_sunlight_hours', 0)
+        )
+
+        if structure_results:
+            ref_comparisons = structure_results[0]['comparisons']
+            for comp in ref_comparisons:
+                html_content += f"""
+                        <tr>
+                            <td>{comp['material_name']}</td>
+                            <td>${comp['estimated_cost']:,} (Approx)</td>
+                            <td>{comp['lifespan_years']} Years</td>
+                            <td>{comp['warranty_years']} Years</td>
+                        </tr>
+                """
+
+        html_content += """
+                    </tbody>
+                </table>
+                <p style="font-size: 0.8em; color: #64748b; margin-top: 10px;">*Material costs shown are approximate for the Main House only.</p>
+            </div>
+
+        </body>
+        </html>
+        """
+
+        return html_content
