@@ -7,7 +7,8 @@ export enum AppTab {
   STRATEGY_CHAT = 'strategy-chat',
   LIVE_CONSULT = 'live-consult',
   LANDING_PAGE = 'landing-page',
-  AUDIO_LAB = 'audio-lab'
+  AUDIO_LAB = 'audio-lab',
+  PET_APPAREL_STORE = 'pet-apparel-store'
 }
 
 export interface GeneratedContent {
