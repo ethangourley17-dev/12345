@@ -10,6 +10,7 @@ import StrategyChat from './components/StrategyChat';
 import LiveConsult from './components/LiveConsult';
 import LandingPageBuilder from './components/LandingPageBuilder';
 import AudioLab from './components/AudioLab';
+import PetApparelStore from './components/PetApparelStore';
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<AppTab>(AppTab.DASHBOARD);
@@ -78,6 +79,7 @@ const App: React.FC = () => {
           {activeTab === AppTab.LIVE_CONSULT && <LiveConsult />}
           {activeTab === AppTab.LANDING_PAGE && <LandingPageBuilder />}
           {activeTab === AppTab.AUDIO_LAB && <AudioLab />}
+          {activeTab === AppTab.PET_APPAREL_STORE && <PetApparelStore />}
         </div>
       </main>
     </div>
