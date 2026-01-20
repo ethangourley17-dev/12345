@@ -10,11 +10,36 @@ View your app in AI Studio: https://ai.studio/apps/drive/1PZeAd8WzVS-Z8mPg-_lf0y
 
 ## Run Locally
 
-**Prerequisites:**  Node.js
+### Frontend (React/TypeScript)
 
+**Prerequisites:**  Node.js
 
 1. Install dependencies:
    `npm install`
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
 3. Run the app:
    `npm run dev`
+
+### Backend (Streamlit/Python)
+
+**Prerequisites:**  Python 3.12+
+
+1. Create and activate virtual environment:
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   ```
+
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Run the Streamlit app:
+   ```bash
+   streamlit run app.py --server.port 8501
+   ```
+
+4. Open your browser to `http://localhost:8501`
+
+**Note:** The Streamlit app (`app.py`) is a Roof Damage Classifier that integrates with Google Cloud Vertex AI. You'll need to configure your GCP Project ID in the app's sidebar.
