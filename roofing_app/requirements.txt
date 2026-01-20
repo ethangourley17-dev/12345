@@ -1,0 +1,9 @@
+requests
+matplotlib
+pandas
+pystac-client
+stackstac
+rioxarray
+pypdf
+shapely
+streamlit
