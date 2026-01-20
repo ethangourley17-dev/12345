@@ -1,7 +1,6 @@
 import requests
 import base64
 import os
-import pystac_client
 from pystac_client import Client
 # from google.colab import userdata # Not available in standard python env
 # import stackstac # Not needed for Google Static Maps
@@ -47,7 +46,7 @@ def fetch_stac_imagery(lat, lon, cloud_cover_limit=20):
     point = {"type": "Point", "coordinates": [lon, lat]}
 
     try:
-        catalog = pystac_client.Client.open(STAC_URL)
+        catalog = Client.open(STAC_URL)
         search = catalog.search(
             intersects=point,
             collections=[COLLECTION],
